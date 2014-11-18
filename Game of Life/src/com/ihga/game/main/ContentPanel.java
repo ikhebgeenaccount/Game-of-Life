@@ -6,6 +6,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
 
+import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 
 public class ContentPanel extends JPanel {
@@ -17,16 +18,17 @@ public class ContentPanel extends JPanel {
 	
 	private int[][] lifeAndDeath;
 	
+	private ImageIcon death;
+	private ImageIcon life;
+	
 	public ContentPanel(){
 		setLayout(new GridBagLayout());
 		
 		c = new GridBagConstraints();
-		c.insets = new Insets(1, 1, 1, 1);
+		c.insets = new Insets(0, 0, 1, 1);
 		
-		width = 25;
-		height = 25;
-		
-		setPreferredSize(new Dimension(width * 27, height * 27));
+		width = 75;
+		height = 60;
 		
 		lifeAndDeath = new int[height][width];
 		
@@ -37,7 +39,19 @@ public class ContentPanel extends JPanel {
 			}
 		}
 		
-		repaint();
+		death = new ImageIcon(getClass().getClassLoader().getResource("com/ihga/graphics/img/death.png"));
+		life = new ImageIcon(getClass().getClassLoader().getResource("com/ihga/graphics/img/life.png"));
+		
+		for(c.gridx = 0; c.gridx < width; c.gridx++){
+			for(c.gridy = 0; c.gridy < height; c.gridy++){
+				//Draw LabelIcons
+				if(lifeAndDeath[c.gridy][c.gridy] == 0){
+					add(new LabelIcon(death, c.gridx, c.gridy, 0), c);
+				}else{
+					add(new LabelIcon(life, c.gridx, c.gridy, 1), c);
+				}
+			}
+		}
 	}
 	
 	@Override
@@ -48,13 +62,18 @@ public class ContentPanel extends JPanel {
 			for(c.gridy = 0; c.gridy < height; c.gridy++){
 				//Draw LabelIcons
 				if(lifeAndDeath[c.gridy][c.gridy] == 0){
-					add(Main.getDeath(), c);
+					add(new LabelIcon(death, c.gridx, c.gridy, 0), c);
 				}else{
-					add(Main.getLife(), c);
+					add(new LabelIcon(life, c.gridx, c.gridy, 1), c);
 				}
 			}
 		}
-		g.dispose();
+		
+		System.out.println("repaint");
+	}
+	
+	public void setSquare(int x, int y, int set){
+		lifeAndDeath[y][x] = set;
 	}
 
 }
