@@ -14,37 +14,42 @@ public class Main {
 	private static ContentPanel contentPanel;
 	private static GridBagConstraints c;
 	
-	//JLabels with ImageIcons
-	private static LabelIcon life;
-	private static LabelIcon death;
-	
 	public static void main(String[] args){
-		life = new LabelIcon(new ImageIcon(Main.class.getClassLoader().getResource("com/ihga/graphics/img/life.png")));
-		death = new LabelIcon(new ImageIcon(Main.class.getClassLoader().getResource("com/ihga/graphics/img/death.png")));
-		
 		contentPanel = new ContentPanel();
 		
 		setupFrame();
+		
+		GameLoop gameLoop = new GameLoop();
+		gameLoop.start();
 	}
 	
 	public static void setupFrame(){
 		frame = new JFrame("Game of Life");
 		
-		frame.setContentPane(contentPanel);
+		frame.getContentPane().add(contentPanel);
 		frame.setResizable(false);
-		frame.setLocationRelativeTo(null);
 		frame.pack();
+		frame.setLocationRelativeTo(null);		
 		
 		frame.setVisible(true);
 	}
 	
-	//Getters for labelicons
-	public static LabelIcon getLife(){
-		return life;
+	public static ContentPanel getContentPanel(){
+		return contentPanel;
 	}
 	
-	public static LabelIcon getDeath(){
-		return death;
+	private static class GameLoop extends Thread{
+		
+		public GameLoop(){
+			
+		}
+		
+		@Override
+		public void run() {
+			contentPanel.repaint();
+			
+		}
+		
 	}
 
 }
