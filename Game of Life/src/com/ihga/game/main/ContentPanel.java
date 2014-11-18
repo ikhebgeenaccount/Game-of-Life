@@ -1,8 +1,10 @@
 package com.ihga.game.main;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 
 import javax.swing.JPanel;
 
@@ -19,9 +21,12 @@ public class ContentPanel extends JPanel {
 		setLayout(new GridBagLayout());
 		
 		c = new GridBagConstraints();
+		c.insets = new Insets(1, 1, 1, 1);
 		
 		width = 50;
 		height = 50;
+		
+		setPreferredSize(new Dimension(width * 25, height * 25));
 		
 		lifeAndDeath = new int[height][width];
 		
@@ -31,6 +36,8 @@ public class ContentPanel extends JPanel {
 				lifeAndDeath[y][x] = 0;
 			}
 		}
+		
+		repaint();
 	}
 	
 	@Override
