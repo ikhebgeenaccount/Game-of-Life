@@ -17,7 +17,7 @@ public class Main {
 	private static LabelIcon life;
 	private static LabelIcon death;
 	
-	public static void main(String[] args){
+	public static void main(String[] args){		
 		contentPanel = new ContentPanel();
 		
 		setupFrame();
