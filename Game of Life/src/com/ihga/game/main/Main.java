@@ -1,4 +1,4 @@
-package com.ihga.main;
+package com.ihga.game.main;
 
 public class Main {
 	//Detect if image is clicked:
