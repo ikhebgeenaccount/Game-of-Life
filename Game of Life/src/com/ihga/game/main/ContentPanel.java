@@ -26,7 +26,7 @@ public class ContentPanel extends JPanel {
 		width = 50;
 		height = 50;
 		
-		setPreferredSize(new Dimension(width * 25, height * 25));
+		setPreferredSize(new Dimension(width * 26, height * 26));
 		
 		lifeAndDeath = new int[height][width];
 		
