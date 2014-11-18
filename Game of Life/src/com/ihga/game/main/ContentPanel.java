@@ -23,10 +23,10 @@ public class ContentPanel extends JPanel {
 		c = new GridBagConstraints();
 		c.insets = new Insets(1, 1, 1, 1);
 		
-		width = 50;
-		height = 50;
+		width = 25;
+		height = 25;
 		
-		setPreferredSize(new Dimension(width * 26, height * 26));
+		setPreferredSize(new Dimension(width * 27, height * 27));
 		
 		lifeAndDeath = new int[height][width];
 		
