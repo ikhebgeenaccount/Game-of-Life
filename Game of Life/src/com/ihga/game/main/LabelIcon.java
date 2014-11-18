@@ -8,7 +8,12 @@ import javax.swing.JLabel;
 
 public class LabelIcon extends JLabel {
 	
-	public LabelIcon(ImageIcon image){
+	private int x, y, lifeOrDeath;
+	
+	public LabelIcon(ImageIcon image, int xset, int yset, int type){
+		this.x = xset;
+		this.y = yset;
+		this.lifeOrDeath = type;
 		
 		setIcon(image);
 		
@@ -16,7 +21,12 @@ public class LabelIcon extends JLabel {
 
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				// TODO Auto-generated method stub
+				if(lifeOrDeath == 0){
+					Main.getContentPanel().setSquare(x, y, 1);
+				}else{
+					Main.getContentPanel().setSquare(x, y, 0);
+				}
+
 				
 			}
 
