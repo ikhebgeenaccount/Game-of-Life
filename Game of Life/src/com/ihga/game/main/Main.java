@@ -14,13 +14,16 @@ public class Main {
 	private static ContentPanel contentPanel;
 	private static GridBagConstraints c;
 	
+	private static boolean running;
+	
 	public static void main(String[] args){
 		contentPanel = new ContentPanel();
 		
 		setupFrame();
 		
-		GameLoop gameLoop = new GameLoop();
-		gameLoop.start();
+		InitLoop initLoop = new InitLoop();
+		running = true;
+		initLoop.start();
 	}
 	
 	public static void setupFrame(){
@@ -38,7 +41,7 @@ public class Main {
 		return contentPanel;
 	}
 	
-	private static class GameLoop extends Thread{
+	private static class InitLoop extends Thread{
 		
 		public GameLoop(){
 			
@@ -46,8 +49,9 @@ public class Main {
 		
 		@Override
 		public void run() {
-			contentPanel.repaint();
-			
+			while(running){
+				contentPanel.repaint();	
+			}
 		}
 		
 	}
