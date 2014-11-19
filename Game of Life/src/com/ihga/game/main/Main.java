@@ -20,6 +20,7 @@ public class Main {
 	private static SimulationLoop simLoop;
 	
 	private static boolean running;
+	private static boolean edit;
 	
 	public static void main(String[] args){
 		contentPanel = new ContentPanel();
@@ -29,6 +30,8 @@ public class Main {
 		initLoop = new InitLoop();
 		running = true;
 		initLoop.start();
+		
+		edit = true;
 	}
 	
 	public static void setupFrame(){
@@ -39,6 +42,8 @@ public class Main {
 		buttonPanel.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				initLoop.quit();
+				
+				edit = false;
 				
 				simLoop = new SimulationLoop();
 				simLoop.start();
@@ -93,6 +98,10 @@ public class Main {
 				System.out.println("Paint time: " + System.currentTimeMillis() - startTime);
 			}
 		}
+	}
+	
+	public static boolean editAllowed(){
+		return edit;
 	}
 
 }
