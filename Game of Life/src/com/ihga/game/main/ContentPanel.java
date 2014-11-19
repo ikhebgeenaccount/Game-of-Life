@@ -1,11 +1,17 @@
 package com.ihga.game.main;
 
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Image;
 import java.awt.Insets;
+import java.awt.Point;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.io.IOException;
 
-import javax.swing.ImageIcon;
+import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 public class ContentPanel extends JPanel {
@@ -17,8 +23,10 @@ public class ContentPanel extends JPanel {
 	
 	private int[][] lifeAndDeath;
 	
-	private ImageIcon death;
-	private ImageIcon life;
+	private Image death;
+	private Image life;
+	
+	private boolean mousePressed;
 	
 	public ContentPanel(){
 		setLayout(new GridBagLayout());
@@ -26,10 +34,13 @@ public class ContentPanel extends JPanel {
 		c = new GridBagConstraints();
 		c.insets = new Insets(0, 0, 1, 1);
 		
-		width = 75;
-		height = 60;
+		//Number of tiles
+		width = 90;
+		height = 50;
 		
 		lifeAndDeath = new int[height][width];
+		
+		mousePressed = false;
 		
 		//Filling matrix with death
 		for(int x = 0; x < width; x++){
@@ -38,19 +49,61 @@ public class ContentPanel extends JPanel {
 			}
 		}
 		
-		death = new ImageIcon(getClass().getClassLoader().getResource("com/ihga/graphics/img/death.png"));
-		life = new ImageIcon(getClass().getClassLoader().getResource("com/ihga/graphics/img/life.png"));
+		//Load images
+		try{
+			death = ImageIO.read(getClass().getClassLoader().getResource("com/ihga/graphics/img/death.png"));
+			life = ImageIO.read(getClass().getClassLoader().getResource("com/ihga/graphics/img/life.png"));
+		}catch(IOException e){
+			e.printStackTrace();
+		}	
 		
-		for(c.gridx = 0; c.gridx < width; c.gridx++){
-			for(c.gridy = 0; c.gridy < height; c.gridy++){
-				//Draw LabelIcons
-				if(lifeAndDeath[c.gridy][c.gridy] == 0){
-					add(new LabelIcon(death, c.gridx, c.gridy, 0), c);
+		addMouseListener(new MouseListener(){
+
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				Point mousePoint = arg0.getPoint();
+				
+				int x = mousePoint.x/11;
+				int y = mousePoint.y/11;
+				
+				System.out.println("(x, y) | (" + x + "," + y + ")");
+				
+				if(lifeAndDeath[y][x] == 0){
+					lifeAndDeath[y][x] = 1;
+					System.out.println("Life");
 				}else{
-					add(new LabelIcon(life, c.gridx, c.gridy, 1), c);
+					lifeAndDeath[y][x] = 0;
+					System.out.println("Death");
 				}
 			}
-		}
+
+			@Override
+			public void mouseEntered(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mouseExited(MouseEvent arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			@Override
+			public void mousePressed(MouseEvent arg0) {
+				mousePressed = true;
+				
+			}
+
+			@Override
+			public void mouseReleased(MouseEvent arg0) {
+				mousePressed = false;
+				
+			}
+			
+		});
+		
+		setPreferredSize(new Dimension(width * 11, height * 11));
 	}
 	
 	@Override
@@ -60,15 +113,13 @@ public class ContentPanel extends JPanel {
 		for(c.gridx = 0; c.gridx < width; c.gridx++){
 			for(c.gridy = 0; c.gridy < height; c.gridy++){
 				//Draw LabelIcons
-				if(lifeAndDeath[c.gridy][c.gridy] == 0){
-					add(new LabelIcon(death, c.gridx, c.gridy, 0), c);
+				if(lifeAndDeath[c.gridy][c.gridx] == 0){
+					g.drawImage(death, c.gridx * 11, c.gridy * 11, null);
 				}else{
-					add(new LabelIcon(life, c.gridx, c.gridy, 1), c);
+					g.drawImage(life, c.gridx * 11, c.gridy * 11, null);
 				}
 			}
 		}
-		
-		System.out.println("repaint");
 	}
 	
 	public void simulate(){
@@ -78,7 +129,7 @@ public class ContentPanel extends JPanel {
 				for(int x2 = x; x2 < x + 2; x2++){
 					for(int y2 = y; y2 < y + 2; y2++){
 						try{
-							sum += lifeAndDeath[y2][x2];
+							sum += lifeAndDeath[y2 + y][x2 + x];
 						}catch(ArrayIndexOutOfBoundsException e){
 							
 						}
@@ -91,10 +142,6 @@ public class ContentPanel extends JPanel {
 				}
 			}
 		}
-	}
-	
-	public void setSquare(int x, int y, int set){
-		lifeAndDeath[y][x] = set;
 	}
 
 }
