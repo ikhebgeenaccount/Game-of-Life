@@ -22,23 +22,27 @@ public class LabelIcon extends JLabel {
 
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				if(lifeOrDeath == 0){
-					Main.getContentPanel().setSquare(x, y, 1);
-				}else{
-					Main.getContentPanel().setSquare(x, y, 0);
+				if(Main.editAllowed()){
+					if(lifeOrDeath == 0){
+						Main.getContentPanel().setSquare(x, y, 1);
+					}else{
+						Main.getContentPanel().setSquare(x, y, 0);
+					}
+					mousePressed = true;
 				}
-				mousePressed = true;
 				
 			}
 
 			@Override
 			public void mouseEntered(MouseEvent arg0) {
-				if(mousePressed){
-					if(lifeOrDeath == 0){
-						Main.getContentPanel().setSquare(x, y, 1);
-					}else{
-						Main.getContentPanel().setSquare(x, y, 0);
-					}	
+				if(Main.editAllowed()){
+					if(mousePressed){
+						if(lifeOrDeath == 0){
+							Main.getContentPanel().setSquare(x, y, 1);
+						}else{
+							Main.getContentPanel().setSquare(x, y, 0);
+						}	
+					}
 				}
 				
 			}
