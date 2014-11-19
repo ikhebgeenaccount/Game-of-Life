@@ -1,5 +1,6 @@
 package com.ihga.game.main;
 
+import java.awt.BorderLayout;
 import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
@@ -31,9 +32,9 @@ public class Main {
 		
 		setupFrame();
 		
-		//initLoop = new InitLoop();
+		initLoop = new InitLoop();
 		running = true;
-		//initLoop.start();
+		initLoop.start();
 		
 		edit = true;
 	}
@@ -55,8 +56,12 @@ public class Main {
 			}	
 		});
 		
-		frame.getContentPane().add(buttonPanel);		
-		frame.getContentPane().add(contentPanel);
+		buttonPanel.add(startButton);
+		
+		frame.getContentPane().setLayout(new BorderLayout());
+		
+		frame.getContentPane().add(buttonPanel, BorderLayout.NORTH);		
+		frame.getContentPane().add(contentPanel, BorderLayout.SOUTH);
 		
 		frame.setResizable(false);
 		frame.pack();
