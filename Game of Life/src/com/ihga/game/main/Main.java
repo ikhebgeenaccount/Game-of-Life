@@ -11,8 +11,13 @@ public class Main {
 	
 	//GUI
 	private static JFrame frame;
+	private static JPanel buttonPanel;
+	private static JButton startButton;
 	private static ContentPanel contentPanel;
 	private static GridBagConstraints c;
+	
+	private static InitLoop initLoop;
+	private static SimulationLoop simLoop;
 	
 	private static boolean running;
 	
@@ -21,13 +26,24 @@ public class Main {
 		
 		setupFrame();
 		
-		InitLoop initLoop = new InitLoop();
+		initLoop = new InitLoop();
 		running = true;
 		initLoop.start();
 	}
 	
 	public static void setupFrame(){
 		frame = new JFrame("Game of Life");
+		
+		buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		buttonPanel.setText("Start simulation");
+		buttonPanel.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				initLoop.quit();
+				
+				simLoop = new SimulationLoop();
+				simLoop.start();
+			}	
+		});
 		
 		frame.getContentPane().add(contentPanel);
 		frame.setResizable(false);
@@ -43,7 +59,7 @@ public class Main {
 	
 	private static class InitLoop extends Thread{
 		
-		public GameLoop(){
+		public InitLoop(){
 			
 		}
 		
@@ -57,6 +73,24 @@ public class Main {
 			}
 		}
 		
+	}
+	
+	private static class SimulationLoop extends Thread{
+		
+		public SimulationLoop(){
+			
+		}
+		
+		@Override
+		public void run(){
+			long startTime;
+			while(running){
+				startTime = System.currentTimeMillis();
+				contentPanel.simulate();
+				contentPanel.repaint();
+				System.out.println(System.currentTimeMillis() - startTime);
+			}
+		}
 	}
 
 }
