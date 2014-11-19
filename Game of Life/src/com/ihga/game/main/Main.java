@@ -87,8 +87,10 @@ public class Main {
 			while(running){
 				startTime = System.currentTimeMillis();
 				contentPanel.simulate();
+				System.out.println("Simulation time: " + System.currentTimeMillis() - startTime);
+				startTime = System.currentTimeMillis();
 				contentPanel.repaint();
-				System.out.println(System.currentTimeMillis() - startTime);
+				System.out.println("Paint time: " + System.currentTimeMillis() - startTime);
 			}
 		}
 	}
