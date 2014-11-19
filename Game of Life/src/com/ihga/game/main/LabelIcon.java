@@ -9,6 +9,7 @@ import javax.swing.JLabel;
 public class LabelIcon extends JLabel {
 	
 	private int x, y, lifeOrDeath;
+	private static boolean mousePressed;
 	
 	public LabelIcon(ImageIcon image, int xset, int yset, int type){
 		this.x = xset;
@@ -26,13 +27,19 @@ public class LabelIcon extends JLabel {
 				}else{
 					Main.getContentPanel().setSquare(x, y, 0);
 				}
-
+				mousePressed = true;
 				
 			}
 
 			@Override
 			public void mouseEntered(MouseEvent arg0) {
-				// TODO Auto-generated method stub
+				if(mousePressed){
+					if(lifeOrDeath == 0){
+						Main.getContentPanel().setSquare(x, y, 1);
+					}else{
+						Main.getContentPanel().setSquare(x, y, 0);
+					}	
+				}
 				
 			}
 
@@ -50,7 +57,7 @@ public class LabelIcon extends JLabel {
 
 			@Override
 			public void mouseReleased(MouseEvent arg0) {
-				// TODO Auto-generated method stub
+				mousePressed = false;
 				
 			}
 			
