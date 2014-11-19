@@ -49,8 +49,11 @@ public class Main {
 		
 		@Override
 		public void run() {
+			long startTime;
 			while(running){
+				startTime = System.currentTimeMillis();
 				contentPanel.repaint();	
+				System.out.println(System.currentTimeMillis() - startTime);
 			}
 		}
 		
