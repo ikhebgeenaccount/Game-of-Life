@@ -72,6 +72,28 @@ public class ContentPanel extends JPanel {
 		System.out.println("repaint");
 	}
 	
+	public void simulate(){
+		for(x = 0; x < width; x++){
+			for(y = 0; y < height; y++){
+				int sum = 0;
+				for(x2 = x; x2 < x + 2; x2++){
+					for(y2 = y; y2 < y + 2; y2++){
+						try{
+							sum += lifeAndDeath[y2][x2];
+						}catch(ArrayOutOfBoundsException e){
+							
+						}
+					}
+				}
+				if(sum == 2 || sum == 3){
+					lifeAndDeath[y2][x2] = 1;
+				}else{
+					lifeAndDeath[y2][x2] = 0;
+				}
+			}
+		}
+	}
+	
 	public void setSquare(int x, int y, int set){
 		lifeAndDeath[y][x] = set;
 	}
