@@ -1,9 +1,13 @@
 package com.ihga.game.main;
 
+import java.awt.FlowLayout;
 import java.awt.GridBagConstraints;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
-import javax.swing.ImageIcon;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 public class Main {
 	//Detect if image is clicked:
@@ -27,9 +31,9 @@ public class Main {
 		
 		setupFrame();
 		
-		initLoop = new InitLoop();
+		//initLoop = new InitLoop();
 		running = true;
-		initLoop.start();
+		//initLoop.start();
 		
 		edit = true;
 	}
@@ -38,10 +42,11 @@ public class Main {
 		frame = new JFrame("Game of Life");
 		
 		buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		buttonPanel.setText("Start simulation");
-		buttonPanel.addActionListener(new ActionListener(){
+		
+		startButton = new JButton("Start simulation");
+		startButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				initLoop.quit();
+				initLoop.interrupt();
 				
 				edit = false;
 				
@@ -50,10 +55,13 @@ public class Main {
 			}	
 		});
 		
+		frame.getContentPane().add(buttonPanel);		
 		frame.getContentPane().add(contentPanel);
+		
 		frame.setResizable(false);
 		frame.pack();
-		frame.setLocationRelativeTo(null);		
+		frame.setLocationRelativeTo(null);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		frame.setVisible(true);
 	}
@@ -70,11 +78,32 @@ public class Main {
 		
 		@Override
 		public void run() {
+			long maxFPS = 30;
 			long startTime;
+			long frameTime = 1000/maxFPS;
+			long endTime;
 			while(running){
+				//The startTime of this loop
 				startTime = System.currentTimeMillis();
-				contentPanel.repaint();	
-				System.out.println(System.currentTimeMillis() - startTime);
+				contentPanel.repaint();
+				endTime = System.currentTimeMillis();
+				try{
+					//If the time it took to paint this frame is bigger than the time set for one frame, it needs to instantly
+					//repaint(), since it is behind on schedule
+					if(endTime - startTime > frameTime){
+						
+					 //If the time it took to paint this frame is equal to the time set to paint one frame, it needs to 
+					 //instantly repaint(), since it is perfect on schedule
+					}else if(endTime - startTime == frameTime){
+						
+					 //If it took less time, we need to sleep the remaining millis of the loop time	
+					}else{
+						sleep(frameTime - (endTime - startTime));
+					}
+				}catch(Exception e){
+					
+				}
+		
 			}
 		}
 		
@@ -92,10 +121,10 @@ public class Main {
 			while(running){
 				startTime = System.currentTimeMillis();
 				contentPanel.simulate();
-				System.out.println("Simulation time: " + System.currentTimeMillis() - startTime);
+				System.out.println("Simulation time: " + (System.currentTimeMillis() - startTime));
 				startTime = System.currentTimeMillis();
 				contentPanel.repaint();
-				System.out.println("Paint time: " + System.currentTimeMillis() - startTime);
+				System.out.println("Paint time: " + (System.currentTimeMillis() - startTime));
 			}
 		}
 	}

@@ -1,6 +1,5 @@
 package com.ihga.game.main;
 
-import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -73,22 +72,22 @@ public class ContentPanel extends JPanel {
 	}
 	
 	public void simulate(){
-		for(x = 0; x < width; x++){
-			for(y = 0; y < height; y++){
+		for(int x = 0; x < width; x++){
+			for(int y = 0; y < height; y++){
 				int sum = 0;
-				for(x2 = x; x2 < x + 2; x2++){
-					for(y2 = y; y2 < y + 2; y2++){
+				for(int x2 = x; x2 < x + 2; x2++){
+					for(int y2 = y; y2 < y + 2; y2++){
 						try{
 							sum += lifeAndDeath[y2][x2];
-						}catch(ArrayOutOfBoundsException e){
+						}catch(ArrayIndexOutOfBoundsException e){
 							
 						}
 					}
 				}
 				if(sum == 2 || sum == 3){
-					lifeAndDeath[y2][x2] = 1;
+					lifeAndDeath[y][x] = 1;
 				}else{
-					lifeAndDeath[y2][x2] = 0;
+					lifeAndDeath[y][x] = 0;
 				}
 			}
 		}
