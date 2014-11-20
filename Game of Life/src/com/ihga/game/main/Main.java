@@ -122,6 +122,7 @@ public class Main {
 		
 		@Override
 		public void run(){
+			edit = false;
 			long startTime;
 			while(running){
 				startTime = System.currentTimeMillis();
