@@ -75,8 +75,8 @@ public class Main {
 		contentPanel = new ContentPanel();
 		
 		statusBar = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-		livingCells = new JLabel(contentPanel.getLivingCells());
-		simulationsLabel = new JLabel(simulations);
+		livingCells = new JLabel(String.valueOf(contentPanel.getLivingCells()));
+		simulationsLabel = new JLabel(String.valueOf(simulations));
 		statusBar.add(new JLabel("Simulations:"));
 		statusBar.add(simulationsLabel);
 		statusBar.add(new JLabel("Living cells:"));
@@ -117,6 +117,7 @@ public class Main {
 				startTime = System.currentTimeMillis();
 				contentPanel.repaint();
 				endTime = System.currentTimeMillis();
+				livingCells.setText(String.valueOf(contentPanel.getLivingCells()));
 				try{
 					//If the time it took to paint this frame is bigger than the time set for one frame, it needs to instantly
 					//repaint(), since it is behind on schedule
@@ -157,8 +158,14 @@ public class Main {
 				contentPanel.repaint();
 				System.out.println("Paint time: " + (System.currentTimeMillis() - startTime));
 				simulations++;
-				simulationsLabel.setText(simulations);
-				livingCells.setText(contentPanel.getLivingCells());
+				simulationsLabel.setText(String.valueOf(simulations));
+				livingCells.setText(String.valueOf(contentPanel.getLivingCells()));
+				try {
+					sleep(500);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 	}
