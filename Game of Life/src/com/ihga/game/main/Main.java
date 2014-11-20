@@ -8,6 +8,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 public class Main {
@@ -15,22 +16,35 @@ public class Main {
 	//	http://stackoverflow.com/questions/7454569/how-to-detect-a-click-event-in-an-image-class-in-java
 	
 	//GUI
+	private static GridBagConstraints c;
 	private static JFrame frame;
+	
+	//Button
 	private static JPanel buttonPanel;
 	private static JButton startButton;
-	private static ContentPanel contentPanel;
-	private static GridBagConstraints c;
 	
+	//Statusbar
+	private static JPanel statusBar;
+	private static JLabel simulationsLabel;
+	private static JLabel livingCells;
+	
+	//Gamepanel
+	private static ContentPanel contentPanel;
+
+	
+	//Threads
 	private static InitLoop initLoop;
 	private static SimulationLoop simLoop;
 	
 	private static boolean running;
 	private static boolean edit;
 	
+	private static int simulations;
+	
 	public static void main(String[] args){
-		contentPanel = new ContentPanel();
-		
 		setupFrame();
+		
+		simulations = 0;
 		
 		initLoop = new InitLoop();
 		running = true;
@@ -58,10 +72,17 @@ public class Main {
 		
 		buttonPanel.add(startButton);
 		
+		contentPanel = new ContentPanel();
+		
+		statusBar = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+		livingCells = new JLabel(contentPanel.getLivingCells());
+		simulationsLabel = new JLabel(simulations);
+		
 		frame.getContentPane().setLayout(new BorderLayout());
 		
 		frame.getContentPane().add(buttonPanel, BorderLayout.NORTH);		
-		frame.getContentPane().add(contentPanel, BorderLayout.SOUTH);
+		frame.getContentPane().add(contentPanel, BorderLayout.CENTER);
+		frame.getContentPane().add(statusBar, BorderLayout.SOUTH);
 		
 		frame.setResizable(false);
 		frame.pack();
@@ -131,6 +152,9 @@ public class Main {
 				startTime = System.currentTimeMillis();
 				contentPanel.repaint();
 				System.out.println("Paint time: " + (System.currentTimeMillis() - startTime));
+				simulations++;
+				simulationsLabel.setText(simulations);
+				livingCells.setText(contentPanel.getLivingCells());
 			}
 		}
 	}
