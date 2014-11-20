@@ -135,7 +135,7 @@ public class ContentPanel extends JPanel {
 						}
 					}
 				}
-				if(sum == 2 || sum == 3){
+				if(sum == 3 || sum == 4){
 					lifeAndDeath[y][x] = 1;
 				}else{
 					lifeAndDeath[y][x] = 0;
