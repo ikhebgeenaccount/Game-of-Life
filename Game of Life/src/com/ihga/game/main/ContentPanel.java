@@ -126,8 +126,8 @@ public class ContentPanel extends JPanel {
 		for(int x = 0; x < width; x++){
 			for(int y = 0; y < height; y++){
 				int sum = 0;
-				for(int x2 = x; x2 < x + 2; x2++){
-					for(int y2 = y; y2 < y + 2; y2++){
+				for(int x2 = -1; x2 < 2; x2++){
+					for(int y2 = -1; y2 < 2; y2++){
 						try{
 							sum += lifeAndDeath[y2 + y][x2 + x];
 						}catch(ArrayIndexOutOfBoundsException e){
