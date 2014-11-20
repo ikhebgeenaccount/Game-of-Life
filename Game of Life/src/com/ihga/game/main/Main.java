@@ -77,6 +77,10 @@ public class Main {
 		statusBar = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		livingCells = new JLabel(contentPanel.getLivingCells());
 		simulationsLabel = new JLabel(simulations);
+		statusBar.add(new JLabel("Simulations:"));
+		statusBar.add(simulationsLabel);
+		statusBar.add(new JLabel("Living cells:"));
+		statusBar.add(livingCells);
 		
 		frame.getContentPane().setLayout(new BorderLayout());
 		
