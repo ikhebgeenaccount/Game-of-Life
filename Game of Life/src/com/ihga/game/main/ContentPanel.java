@@ -149,6 +149,7 @@ public class ContentPanel extends JPanel {
 		for(int i = 0; i < height; i++){
 			sum+= IntStream.of(lifeAndDeath[i]).sum();
 		}
+		//int sum = IntStream.of(IntStream.of(lifeAndDeath).sum()).sum();
 		return sum;
 	}
 
