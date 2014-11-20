@@ -143,5 +143,13 @@ public class ContentPanel extends JPanel {
 			}
 		}
 	}
+	
+	public int getLivingCells(){
+		int sum = 0;
+		for(int i = 0; i < height; i++){
+			sum+= IntStream.of(lifeAndDeath[i]).sum();
+		}
+		return sum;
+	}
 
 }
