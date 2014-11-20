@@ -68,10 +68,10 @@ public class ContentPanel extends JPanel {
 				
 				System.out.println("(x, y) | (" + x + "," + y + ")");
 				
-				if(lifeAndDeath[y][x] == 0){
+				if(lifeAndDeath[y][x] == 0 && Main.editAllowed()){
 					lifeAndDeath[y][x] = 1;
 					System.out.println("Life");
-				}else{
+				}else if(Main.editAllowed()){
 					lifeAndDeath[y][x] = 0;
 					System.out.println("Death");
 				}
