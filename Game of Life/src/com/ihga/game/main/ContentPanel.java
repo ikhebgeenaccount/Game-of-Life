@@ -23,6 +23,7 @@ public class ContentPanel extends JPanel {
 	private int height;
 	
 	private int[][] lifeAndDeath;
+	private int[][] newLifeAndDeath;
 	
 	private Image death;
 	private Image life;
@@ -125,6 +126,7 @@ public class ContentPanel extends JPanel {
 	
 	public void simulate(){
 		System.out.println("start simulation");
+		newLifeAndDeath = lifeAndDeath;
 		for(int x = 0; x < width; x++){
 			for(int y = 0; y < height; y++){
 				int sum = 0;
@@ -140,12 +142,13 @@ public class ContentPanel extends JPanel {
 					}
 				}
 				if(sum == 3 || sum == 4){
-					lifeAndDeath[y][x] = 1;
+					newLifeAndDeath[y][x] = 1;
 				}else{
-					lifeAndDeath[y][x] = 0;
+					newLifeAndDeath[y][x] = 0;
 				}
 			}
 		}
+		lifeAndDeath = newLifeAndDeath;
 	}
 	
 	public int getLivingCells(){
