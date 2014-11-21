@@ -125,15 +125,12 @@ public class ContentPanel extends JPanel {
 	}
 	
 	public void simulate(){
-		System.out.println("start simulation");
 		newLifeAndDeath = lifeAndDeath;
 		for(int x = 0; x < width; x++){
 			for(int y = 0; y < height; y++){
 				int sum = 0;
-				System.out.println("Checking: (" + x + "," + y + ")");
 				for(int x2 = -1; x2 < 2; x2++){
 					for(int y2 = -1; y2 < 2; y2++){	
-						System.out.println("    (" + (x + x2) + "," + (y + y2) + ")");
 						try{
 							sum += lifeAndDeath[y2 + y][x2 + x];
 						}catch(ArrayIndexOutOfBoundsException e){
