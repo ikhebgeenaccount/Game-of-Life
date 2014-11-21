@@ -77,7 +77,7 @@ public class Main {
 		statusBar = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		livingCells = new JLabel(String.valueOf(contentPanel.getLivingCells()));
 		simulationsLabel = new JLabel(String.valueOf(simulations));
-		statusBar.add(new JLabel("Simulations:"));
+		statusBar.add(new JLabel("Generations:"));
 		statusBar.add(simulationsLabel);
 		statusBar.add(new JLabel("Living cells:"));
 		statusBar.add(livingCells);
@@ -160,12 +160,6 @@ public class Main {
 				simulations++;
 				simulationsLabel.setText(String.valueOf(simulations));
 				livingCells.setText(String.valueOf(contentPanel.getLivingCells()));
-				try {
-					sleep(500);
-				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
 			}
 		}
 	}
