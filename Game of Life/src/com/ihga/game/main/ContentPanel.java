@@ -15,12 +15,15 @@ import java.util.stream.IntStream;
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
-public class ContentPanel extends JPanel {
+public class ContentPanel extends JPanel implements MouseListener implements MouseMotionListener{
 	
 	private GridBagConstraints c;
 	
 	private int width;
 	private int height;
+	
+	private int previousX;
+	private int previousY;
 	
 	private int[][] lifeAndDeath;
 	private int[][] newLifeAndDeath;
@@ -32,6 +35,10 @@ public class ContentPanel extends JPanel {
 	
 	public ContentPanel(){
 		setLayout(new GridBagLayout());
+		
+		//Add listeners
+		addMouseListener(this);
+		addMouseMotionListener(this);
 		
 		c = new GridBagConstraints();
 		c.insets = new Insets(0, 0, 1, 1);
@@ -57,53 +64,7 @@ public class ContentPanel extends JPanel {
 			life = ImageIO.read(getClass().getClassLoader().getResource("com/ihga/graphics/img/life.png"));
 		}catch(IOException e){
 			e.printStackTrace();
-		}	
-		
-		addMouseListener(new MouseListener(){
-
-			@Override
-			public void mouseClicked(MouseEvent arg0) {
-				Point mousePoint = arg0.getPoint();
-				
-				int x = mousePoint.x/11;
-				int y = mousePoint.y/11;
-				
-				System.out.println("(x, y) | (" + x + "," + y + ")");
-				
-				if(lifeAndDeath[y][x] == 0 && Main.editAllowed()){
-					lifeAndDeath[y][x] = 1;
-					System.out.println("Life");
-				}else if(Main.editAllowed()){
-					lifeAndDeath[y][x] = 0;
-					System.out.println("Death");
-				}
-			}
-
-			@Override
-			public void mouseEntered(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mouseExited(MouseEvent arg0) {
-				// TODO Auto-generated method stub
-				
-			}
-
-			@Override
-			public void mousePressed(MouseEvent arg0) {
-				mousePressed = true;
-				
-			}
-
-			@Override
-			public void mouseReleased(MouseEvent arg0) {
-				mousePressed = false;
-				
-			}
-			
-		});
+		}
 		
 		setPreferredSize(new Dimension(width * 11, height * 11));
 	}
@@ -156,5 +117,63 @@ public class ContentPanel extends JPanel {
 		//int sum = IntStream.of(IntStream.of(lifeAndDeath).sum()).sum();
 		return sum;
 	}
+	
+	//MouseListener implemented methods
+	public void mouseClicked(MouseEvent e) {
+		Point mousePoint = e.getPoint();
+		
+		int x = mousePoint.x/11;
+		int y = mousePoint.y/11;
+		
+		previousX = x;
+		previousY = y;
+		
+		if(lifeAndDeath[y][x] == 0 && Main.editAllowed()){
+			lifeAndDeath[y][x] = 1;
+		}else if(Main.editAllowed()){
+			lifeAndDeath[y][x] = 0;
+		}
+	}
+	
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
 
+	public void mousePressed(MouseEvent e) {
+		mousePressed = true;
+		
+	}
+
+	public void mouseReleased(MouseEvent e) {
+		mousePressed = false;
+		
+	}
+	
+	//MouseMotionListener implemented methods
+	public void mouseMoved(MouseEvent e){
+		
+	}
+	
+	public void mouseDragged(MouseEvent e){
+		Point mousePoint = e.getPoint();
+		
+		int x = mousePoint.x/11;
+		int y = mousePoint.y/11;
+		
+		//Check if the cell has to brought alive or killed, check if editing is allowed and check if this cell wasn't changed the previous time we changed a cell.
+		if(lifeAndDeath[y][x] == 0 && Main.editAllowed() && previousX != x && previousY != y){
+			lifeAndDeath[y][x] = 1;
+		}else if(Main.editAllowed()){
+			lifeAndDeath[y][x] = 0;
+		}
+		
+		previousX = x;
+		previousY = y;
+	}
 }
