@@ -99,8 +99,10 @@ public class ContentPanel extends JPanel implements MouseListener implements Mou
 						}
 					}
 				}
-				if(sum == 3 || sum == 4){
+				if(sum == 3){
 					newLifeAndDeath[y][x] = 1;
+				}else if(sum == 4){
+				
 				}else{
 					newLifeAndDeath[y][x] = 0;
 				}
