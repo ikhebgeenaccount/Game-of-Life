@@ -9,13 +9,14 @@ import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.io.IOException;
 import java.util.stream.IntStream;
 
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
-public class ContentPanel extends JPanel implements MouseListener implements MouseMotionListener{
+public class ContentPanel extends JPanel implements MouseListener, MouseMotionListener{
 	
 	private GridBagConstraints c;
 	
