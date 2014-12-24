@@ -153,13 +153,19 @@ public class Main {
 			while(running){
 				startTime = System.currentTimeMillis();
 				contentPanel.simulate();
-				System.out.println("Simulation time: " + (System.currentTimeMillis() - startTime));
+				//System.out.println("Simulation time: " + (System.currentTimeMillis() - startTime));
 				startTime = System.currentTimeMillis();
 				contentPanel.repaint();
-				System.out.println("Paint time: " + (System.currentTimeMillis() - startTime));
+				//System.out.println("Paint time: " + (System.currentTimeMillis() - startTime));
 				simulations++;
 				simulationsLabel.setText(String.valueOf(simulations));
 				livingCells.setText(String.valueOf(contentPanel.getLivingCells()));
+				try {
+					Thread.sleep(3000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 	}
