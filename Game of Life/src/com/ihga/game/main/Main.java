@@ -115,26 +115,10 @@ public class Main {
 			while(running){
 				//The startTime of this loop
 				startTime = System.currentTimeMillis();
-				contentPanel.repaint();
+				//contentPanel.repaint();
 				endTime = System.currentTimeMillis();
 				livingCells.setText(String.valueOf(contentPanel.getLivingCells()));
-				try{
-					//If the time it took to paint this frame is bigger than the time set for one frame, it needs to instantly
-					//repaint(), since it is behind on schedule
-					if(endTime - startTime > frameTime){
-						
-					 //If the time it took to paint this frame is equal to the time set to paint one frame, it needs to 
-					 //instantly repaint(), since it is perfect on schedule
-					}else if(endTime - startTime == frameTime){
-						
-					 //If it took less time, we need to sleep the remaining millis of the loop time	
-					}else{
-						sleep(frameTime - (endTime - startTime));
-					}
-				}catch(Exception e){
-					
-				}
-		
+				contentPanel.repaint();		
 			}
 		}
 		
@@ -161,12 +145,20 @@ public class Main {
 				simulationsLabel.setText(String.valueOf(simulations));
 				livingCells.setText(String.valueOf(contentPanel.getLivingCells()));
 				try {
-					Thread.sleep(3000);
+					sleep(200);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
+		}
+	}
+	
+	private static class PaintLoop extends Thread{
+		
+		@Override
+		public void run(){
+			
 		}
 	}
 	

@@ -73,7 +73,7 @@ public class ContentPanel extends JPanel implements MouseListener, MouseMotionLi
 	@Override
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
-		
+		long startTime = System.currentTimeMillis();
 		for(c.gridx = 0; c.gridx < width; c.gridx++){
 			for(c.gridy = 0; c.gridy < height; c.gridy++){
 				//Draw LabelIcons
@@ -91,7 +91,7 @@ public class ContentPanel extends JPanel implements MouseListener, MouseMotionLi
 		for(int x = 0; x < width; x++){
 			for(int y = 0; y < height; y++){
 				if(x > 86 && y > 46){
-					System.out.println("Checking (" + x + "," + y + ") = " + lifeAndDeath[y][x]);
+					//System.out.println("Checking (" + x + "," + y + ") = " + lifeAndDeath[y][x]);
 				}
 				int sum = 0;
 				for(int y2 = -1; y2 < 2; y2++){
@@ -103,7 +103,7 @@ public class ContentPanel extends JPanel implements MouseListener, MouseMotionLi
 								if(x2 == 1){
 									line = "\n";
 								}
-								System.out.print((x2 + x) + "," + (y2 + y) + "  " + lifeAndDeath[y2 + y][x2 + x] + " " + line);
+								//System.out.print((x2 + x) + "," + (y2 + y) + "  " + lifeAndDeath[y2 + y][x2 + x] + " " + line);
 							}							
 						}catch(ArrayIndexOutOfBoundsException e){
 							if(x > 86 && y > 46){
@@ -111,14 +111,14 @@ public class ContentPanel extends JPanel implements MouseListener, MouseMotionLi
 								if(x2 == 1){
 									line = "\n";
 								}
-								System.out.print((x2 + x) + "," + (y2 + y) + "e 0 " + line);
+								//System.out.print((x2 + x) + "," + (y2 + y) + "e 0 " + line);
 								
 							}
 						}						
 					}
 				}
 				if(x > 86 && y > 46){
-					System.out.println(sum);
+					//System.out.println(sum);
 				}
 				if(sum == 3){
 					newLifeAndDeath[y][x] = 1;
@@ -156,6 +156,7 @@ public class ContentPanel extends JPanel implements MouseListener, MouseMotionLi
 		}else if(Main.editAllowed()){
 			lifeAndDeath[y][x] = 0;
 		}
+		repaint();
 	}
 	
 	public void mouseEntered(MouseEvent e) {
