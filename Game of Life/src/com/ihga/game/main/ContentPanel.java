@@ -11,6 +11,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.stream.IntStream;
 
 import javax.imageio.ImageIO;
@@ -87,49 +88,64 @@ public class ContentPanel extends JPanel implements MouseListener, MouseMotionLi
 	}
 	
 	public void simulate(){
-		newLifeAndDeath = lifeAndDeath;
+		newLifeAndDeath = new int[height][width];
+		for(int i = 0; i < height; i++){
+			System.arraycopy(lifeAndDeath[i], 0, newLifeAndDeath[i], 0, lifeAndDeath[i].length);
+		}
+		
 		for(int x = 0; x < width; x++){
 			for(int y = 0; y < height; y++){
-				if(x > 86 && y > 46){
-					//System.out.println("Checking (" + x + "," + y + ") = " + lifeAndDeath[y][x]);
-				}
-				int sum = 0;
-				for(int y2 = -1; y2 < 2; y2++){
-					for(int x2 = -1; x2 < 2; x2++){	
-						try{
-							sum += lifeAndDeath[y2 + y][x2 + x];
-							if(x > 86 && y > 46){
-								String line = "";
-								if(x2 == 1){
-									line = "\n";
-								}
-								//System.out.print((x2 + x) + "," + (y2 + y) + "  " + lifeAndDeath[y2 + y][x2 + x] + " " + line);
-							}							
-						}catch(ArrayIndexOutOfBoundsException e){
-							if(x > 86 && y > 46){
-								String line = "";
-								if(x2 == 1){
-									line = "\n";
-								}
-								//System.out.print((x2 + x) + "," + (y2 + y) + "e 0 " + line);
-								
-							}
-						}						
-					}
-				}
-				if(x > 86 && y > 46){
-					//System.out.println(sum);
-				}
-				if(sum == 3){
-					newLifeAndDeath[y][x] = 1;
-				}else if(sum == 4){
-				
-				}else{
-					newLifeAndDeath[y][x] = 0;
-				}
+				checkCell(x, y);
 			}
 		}
-		lifeAndDeath = newLifeAndDeath;
+		
+		lifeAndDeath = new int[height][width];
+		for(int i = 0; i < height; i++){
+			System.arraycopy(newLifeAndDeath[i], 0, lifeAndDeath[i], 0, newLifeAndDeath[i].length);
+		}
+	}
+	
+	/**Returns true if the cell should live in the next generation, false if the cell should be dead
+	 * @return
+	 */
+	private boolean checkCell(int x, int y){
+		boolean live = false;
+		
+		/*
+		 * Rules:
+		 * 	1. Any live cell with fewer than two live neighbours dies, as if caused by under-population.
+		 * 	2. Any live cell with two or three live neighbours lives on to the next generation.
+		 *	3. Any live cell with more than three live neighbours dies, as if by over-population.
+		 * 	4. Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
+		 */
+		
+		int sum = 0;
+		
+		for(int i = x - 1; i < x + 2; i++){
+			if(i < lifeAndDeath[0].length && i >= 0){
+				for(int j = y - 1; j < y + 2; j++){
+					if(j < lifeAndDeath.length && j >= 0){
+						sum += lifeAndDeath[j][i];						
+					}
+				}				
+			}
+		}
+		
+		if(sum - 1 < 2 && lifeAndDeath[y][x] == 1){
+			//Rule 1: die
+			newLifeAndDeath[y][x] = 0;
+		}else if((sum - 1 == 2 || sum - 1 == 3) && lifeAndDeath[y][x] == 1){
+			//Rule 2: live
+			newLifeAndDeath[y][x] = 1;
+		}else if(sum - 1 > 3 && lifeAndDeath[y][x] == 1){
+			//Rule 3: die
+			newLifeAndDeath[y][x] = 0;
+		}else if(sum == 3 && lifeAndDeath[y][x] == 0){
+			//Rule 4: live
+			newLifeAndDeath[y][x] = 1;
+		}
+		
+		return live;
 	}
 	
 	public int getLivingCells(){
