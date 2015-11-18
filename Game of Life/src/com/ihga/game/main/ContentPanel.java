@@ -74,7 +74,6 @@ public class ContentPanel extends JPanel implements MouseListener, MouseMotionLi
 	@Override
 	public void paintComponent(Graphics g){
 		super.paintComponent(g);
-		long startTime = System.currentTimeMillis();
 		for(c.gridx = 0; c.gridx < width; c.gridx++){
 			for(c.gridy = 0; c.gridy < height; c.gridy++){
 				//Draw LabelIcons
@@ -88,10 +87,7 @@ public class ContentPanel extends JPanel implements MouseListener, MouseMotionLi
 	}
 	
 	public void simulate(){
-		newLifeAndDeath = new int[height][width];
-		for(int i = 0; i < height; i++){
-			System.arraycopy(lifeAndDeath[i], 0, newLifeAndDeath[i], 0, lifeAndDeath[i].length);
-		}
+		newLifeAndDeath = copyArray(lifeAndDeath);
 		
 		for(int x = 0; x < width; x++){
 			for(int y = 0; y < height; y++){
@@ -99,10 +95,7 @@ public class ContentPanel extends JPanel implements MouseListener, MouseMotionLi
 			}
 		}
 		
-		lifeAndDeath = new int[height][width];
-		for(int i = 0; i < height; i++){
-			System.arraycopy(newLifeAndDeath[i], 0, lifeAndDeath[i], 0, newLifeAndDeath[i].length);
-		}
+		lifeAndDeath = copyArray(newLifeAndDeath);
 	}
 	
 	/**Returns true if the cell should live in the next generation, false if the cell should be dead
@@ -146,6 +139,14 @@ public class ContentPanel extends JPanel implements MouseListener, MouseMotionLi
 		}
 		
 		return live;
+	}
+	
+	private int[][] copyArray(int[][] src){
+		int[][] dest = new int[height][width];
+		for(int i = 0; i < height; i++){
+			System.arraycopy(src[i], 0, dest[i], 0, src[i].length);
+		}
+		return dest;
 	}
 	
 	public int getLivingCells(){
