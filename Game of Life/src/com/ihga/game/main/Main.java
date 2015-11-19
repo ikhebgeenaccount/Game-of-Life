@@ -21,7 +21,7 @@ public class Main {
 	
 	//Button
 	private static JPanel buttonPanel;
-	private static JButton startButton;
+	private static JButton startButton, pauseButton, button;
 	
 	//Statusbar
 	private static JPanel statusBar;
@@ -61,13 +61,35 @@ public class Main {
 		startButton = new JButton("Start simulation");
 		startButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				initLoop.interrupt();
+				running = true;
 				
 				edit = false;
 				
 				simLoop = new SimulationLoop();
 				simLoop.start();
+				
+				buttonPanel.removeAll();
+				buttonPanel.add(pauseButton);
+				buttonPanel.revalidate();
+				buttonPanel.repaint();
 			}	
+		});
+		
+		pauseButton = new JButton("Pause simulation");
+		pauseButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				running = false;
+				
+				edit = true;
+				
+				initLoop = new InitLoop();
+				initLoop.start();
+				
+				buttonPanel.removeAll();
+				buttonPanel.add(startButton);
+				buttonPanel.revalidate();
+				buttonPanel.repaint();
+			}
 		});
 		
 		buttonPanel.add(startButton);
@@ -145,7 +167,7 @@ public class Main {
 				simulationsLabel.setText(String.valueOf(simulations));
 				livingCells.setText(String.valueOf(contentPanel.getLivingCells()));
 				try {
-					sleep(200);
+					sleep(100);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

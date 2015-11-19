@@ -33,6 +33,8 @@ public class ContentPanel extends JPanel implements MouseListener, MouseMotionLi
 	private Image death;
 	private Image life;
 	
+	private int space;//Space between cells
+	
 	private boolean mousePressed;
 	
 	public ContentPanel(){
@@ -42,12 +44,14 @@ public class ContentPanel extends JPanel implements MouseListener, MouseMotionLi
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		
+		space = 1;
+		
 		c = new GridBagConstraints();
-		c.insets = new Insets(0, 0, 1, 1);
+		c.insets = new Insets(0, 0, space, space);
 		
 		//Number of tiles
-		width = 90;
-		height = 50;
+		width = 160;
+		height = 80;
 		
 		lifeAndDeath = new int[height][width];
 		
@@ -62,13 +66,13 @@ public class ContentPanel extends JPanel implements MouseListener, MouseMotionLi
 		
 		//Load images
 		try{
-			death = ImageIO.read(getClass().getClassLoader().getResource("com/ihga/graphics/img/death.png"));
+			death= ImageIO.read(getClass().getClassLoader().getResource("com/ihga/graphics/img/death.png"));
 			life = ImageIO.read(getClass().getClassLoader().getResource("com/ihga/graphics/img/life.png"));
 		}catch(IOException e){
 			e.printStackTrace();
 		}
 		
-		setPreferredSize(new Dimension(width * 11, height * 11));
+		setPreferredSize(new Dimension(width * (10 + space), height * (10 + space)));
 	}
 	
 	@Override
@@ -78,9 +82,9 @@ public class ContentPanel extends JPanel implements MouseListener, MouseMotionLi
 			for(c.gridy = 0; c.gridy < height; c.gridy++){
 				//Draw LabelIcons
 				if(lifeAndDeath[c.gridy][c.gridx] == 0){
-					g.drawImage(death, c.gridx * 11, c.gridy * 11, null);
+					g.drawImage(death, c.gridx * (10 + space), c.gridy * (10 + space), null);
 				}else{
-					g.drawImage(life, c.gridx * 11, c.gridy * 11, null);
+					g.drawImage(life, c.gridx * (10 + space), c.gridy * (10 + space), null);
 				}
 			}
 		}
@@ -162,8 +166,8 @@ public class ContentPanel extends JPanel implements MouseListener, MouseMotionLi
 	public void mouseClicked(MouseEvent e) {
 		Point mousePoint = e.getPoint();
 		
-		int x = mousePoint.x/11;
-		int y = mousePoint.y/11;
+		int x = mousePoint.x/(10 + space);
+		int y = mousePoint.y/(10 + space);
 		
 		previousX = x;
 		previousY = y;
