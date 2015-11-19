@@ -44,25 +44,20 @@ public class ContentPanel extends JPanel implements MouseListener, MouseMotionLi
 		addMouseListener(this);
 		addMouseMotionListener(this);
 		
-		space = 1;
+		space = 0;
 		
 		c = new GridBagConstraints();
 		c.insets = new Insets(0, 0, space, space);
 		
 		//Number of tiles
-		width = 160;
-		height = 80;
+		width = 190;
+		height = 90;
 		
 		lifeAndDeath = new int[height][width];
 		
 		mousePressed = false;
 		
-		//Filling matrix with death
-		for(int x = 0; x < width; x++){
-			for(int y = 0; y < height; y++){
-				lifeAndDeath[y][x] = 0;
-			}
-		}
+		resetField();
 		
 		//Load images
 		try{
@@ -162,6 +157,16 @@ public class ContentPanel extends JPanel implements MouseListener, MouseMotionLi
 		return sum;
 	}
 	
+	public void resetField(){
+		//Filling matrix with death
+		for(int x = 0; x < width; x++){
+			for(int y = 0; y < height; y++){
+				lifeAndDeath[y][x] = 0;
+			}
+		}
+		
+	}
+	
 	//MouseListener implemented methods
 	public void mouseClicked(MouseEvent e) {
 		Point mousePoint = e.getPoint();
@@ -208,13 +213,13 @@ public class ContentPanel extends JPanel implements MouseListener, MouseMotionLi
 	public void mouseDragged(MouseEvent e){
 		Point mousePoint = e.getPoint();
 		
-		int x = mousePoint.x/11;
-		int y = mousePoint.y/11;
+		int x = mousePoint.x/(10 + space);
+		int y = mousePoint.y/(10 + space);
 		
 		//Check if the cell has to brought alive or killed, check if editing is allowed and check if this cell wasn't changed the previous time we changed a cell.
-		if(lifeAndDeath[y][x] == 0 && Main.editAllowed() && previousX != x && previousY != y){
+		if(lifeAndDeath[y][x] == 0 && Main.editAllowed() && (previousX != x ^ previousY != y)){
 			lifeAndDeath[y][x] = 1;
-		}else if(Main.editAllowed()){
+		}else if(Main.editAllowed() && previousX != x && previousY != y){
 			lifeAndDeath[y][x] = 0;
 		}
 		

@@ -21,7 +21,7 @@ public class Main {
 	
 	//Button
 	private static JPanel buttonPanel;
-	private static JButton startButton, pauseButton, button;
+	private static JButton startButton, pauseButton, resetButton;
 	
 	//Statusbar
 	private static JPanel statusBar;
@@ -69,6 +69,7 @@ public class Main {
 				simLoop.start();
 				
 				buttonPanel.removeAll();
+				buttonPanel.add(resetButton);
 				buttonPanel.add(pauseButton);
 				buttonPanel.revalidate();
 				buttonPanel.repaint();
@@ -86,13 +87,24 @@ public class Main {
 				initLoop.start();
 				
 				buttonPanel.removeAll();
+				buttonPanel.add(resetButton);
 				buttonPanel.add(startButton);
 				buttonPanel.revalidate();
 				buttonPanel.repaint();
 			}
 		});
 		
+		resetButton = new JButton("Reset");
+		resetButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				contentPanel.resetField();
+				contentPanel.repaint();
+			}
+		});
+		
+		buttonPanel.add(resetButton);
 		buttonPanel.add(startButton);
+		
 		
 		contentPanel = new ContentPanel();
 		
@@ -166,8 +178,21 @@ public class Main {
 				simulations++;
 				simulationsLabel.setText(String.valueOf(simulations));
 				livingCells.setText(String.valueOf(contentPanel.getLivingCells()));
+				if(contentPanel.getLivingCells() == 0){
+					running = false;
+					
+					edit = true;
+					
+					initLoop = new InitLoop();
+					initLoop.start();
+					
+					buttonPanel.removeAll();
+					buttonPanel.add(startButton);
+					buttonPanel.revalidate();
+					buttonPanel.repaint();
+				}
 				try {
-					sleep(100);
+					sleep(10);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
