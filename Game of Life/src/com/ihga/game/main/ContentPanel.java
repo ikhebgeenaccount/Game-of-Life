@@ -13,6 +13,8 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Properties;
 import java.util.Scanner;
 import java.util.stream.IntStream;
 
@@ -22,7 +24,8 @@ import javax.swing.JPanel;
 public class ContentPanel extends JPanel implements MouseListener, MouseMotionListener{
 	
 	private static String delimiter = "c";
-	private static int width = 375, height = 175;
+	private static int width, height; //Field properties
+	private static int size, space; //Cell properties
 	
 	private GridBagConstraints c;
 	
@@ -35,19 +38,15 @@ public class ContentPanel extends JPanel implements MouseListener, MouseMotionLi
 	private Image death;
 	private Image life;
 	
-	private int space, size;//Space between cells
-	
 	private boolean mousePressed;
 	
 	public ContentPanel(){
+		loadProperties();
 		setLayout(new GridBagLayout());
 		
 		//Add listeners
 		addMouseListener(this);
 		addMouseMotionListener(this);
-		
-		space = 0;
-		size = 5;
 		
 		c = new GridBagConstraints();
 		c.insets = new Insets(0, 0, space, space);
@@ -74,6 +73,22 @@ public class ContentPanel extends JPanel implements MouseListener, MouseMotionLi
 		Graphics gl = life.getGraphics();
 		gl.setColor(Color.WHITE);
 		gl.fillRect(0, 0, size, size);
+	}
+	
+	public static void loadProperties(){
+		Properties properties = new Properties();
+		InputStream propertiesFile = Main.class.getClassLoader().getResourceAsStream("settings.cfg");
+		try {
+			properties.load(propertiesFile);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		size = Integer.parseInt(properties.getProperty("size"));
+		space = Integer.parseInt(properties.getProperty("space"));
+		width = Integer.parseInt(properties.getProperty("width"));
+		height = Integer.parseInt(properties.getProperty("height"));
 	}
 	
 	@Override
