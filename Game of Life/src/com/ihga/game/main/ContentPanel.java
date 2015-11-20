@@ -1,5 +1,6 @@
 package com.ihga.game.main;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
@@ -10,8 +11,8 @@ import java.awt.Point;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.lang.reflect.Array;
 import java.util.Scanner;
 import java.util.stream.IntStream;
 
@@ -58,14 +59,21 @@ public class ContentPanel extends JPanel implements MouseListener, MouseMotionLi
 		resetField();
 		
 		//Load images
-		try{
-			death= ImageIO.read(getClass().getClassLoader().getResource("com/ihga/graphics/img/death_" + size + ".png"));
-			life = ImageIO.read(getClass().getClassLoader().getResource("com/ihga/graphics/img/life_" + size + ".png"));
-		}catch(IOException e){
-			e.printStackTrace();
-		}
+		loadPics();
 		
 		setPreferredSize(new Dimension(width * (size + space), height * (size + space)));
+	}
+	
+	private void loadPics(){
+		death = new BufferedImage(size,size, BufferedImage.TYPE_INT_RGB);
+		Graphics gd = death.getGraphics();
+		gd.setColor(Color.BLACK);
+		gd.fillRect(0, 0, size, size);
+		
+		life = new BufferedImage(size, size, BufferedImage.TYPE_INT_RGB);
+		Graphics gl = life.getGraphics();
+		gl.setColor(Color.WHITE);
+		gl.fillRect(0, 0, size, size);
 	}
 	
 	@Override
@@ -107,7 +115,7 @@ public class ContentPanel extends JPanel implements MouseListener, MouseMotionLi
 			if(i < lifeAndDeath[0].length && i >= 0){
 				for(int j = y - 1; j < y + 2; j++){
 					if(j < lifeAndDeath.length && j >= 0){
-						sum += lifeAndDeath[j][i];						
+						sum += lifeAndDeath[j][i];
 					}
 				}				
 			}
