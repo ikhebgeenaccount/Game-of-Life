@@ -184,6 +184,7 @@ public class Main {
 		public void run(){
 			edit = false;
 			while(runningSimulation){
+				long startTime = System.currentTimeMillis();
 				contentPanel.simulate();
 				contentPanel.repaint();
 				simulations++;
@@ -198,15 +199,8 @@ public class Main {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				System.out.println("Simulation time: " + (System.currentTimeMillis() - startTime));
 			}
-		}
-	}
-	
-	private static class PaintLoop extends Thread{
-		
-		@Override
-		public void run(){
-			
 		}
 	}
 	
