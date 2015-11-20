@@ -10,6 +10,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 public class Main {
 	//Detect if image is clicked:
@@ -18,6 +19,13 @@ public class Main {
 	//GUI
 	private static GridBagConstraints c;
 	private static JFrame frame;
+	
+	//Top bar
+	private static JPanel topPanel;
+	
+	//Menu
+	private static JPanel menuPanel;
+	private static JButton saveButton, loadButton;
 	
 	//Button
 	private static JPanel buttonPanel;
@@ -30,13 +38,12 @@ public class Main {
 	
 	//Gamepanel
 	private static ContentPanel contentPanel;
-
 	
 	//Threads
 	private static InitLoop initLoop;
 	private static SimulationLoop simLoop;
 	
-	private static boolean running;
+	private static boolean running, runningSimulation;
 	private static boolean edit;
 	
 	private static int simulations;
@@ -56,41 +63,42 @@ public class Main {
 	public static void setupFrame(){
 		frame = new JFrame("Game of Life");
 		
+		topPanel = new JPanel(new BorderLayout());
+		
+		menuPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+		
+		saveButton = new JButton("Save");
+		saveButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				saveSimulation();
+			}
+		});
+		
+		loadButton = new JButton("Load");
+		loadButton.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e) {
+				loadSimulation();
+				
+			}
+			
+		});
+		
+		menuPanel.add(saveButton);
+		menuPanel.add(loadButton);
+		
 		buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
 		
 		startButton = new JButton("Start simulation");
 		startButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				running = true;
-				
-				edit = false;
-				
-				simLoop = new SimulationLoop();
-				simLoop.start();
-				
-				buttonPanel.removeAll();
-				buttonPanel.add(resetButton);
-				buttonPanel.add(pauseButton);
-				buttonPanel.revalidate();
-				buttonPanel.repaint();
+				startSimulation();
 			}	
 		});
 		
 		pauseButton = new JButton("Pause simulation");
 		pauseButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				running = false;
-				
-				edit = true;
-				
-				initLoop = new InitLoop();
-				initLoop.start();
-				
-				buttonPanel.removeAll();
-				buttonPanel.add(resetButton);
-				buttonPanel.add(startButton);
-				buttonPanel.revalidate();
-				buttonPanel.repaint();
+				pauseSimulation();
 			}
 		});
 		
@@ -98,13 +106,15 @@ public class Main {
 		resetButton.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
 				contentPanel.resetField();
-				contentPanel.repaint();
+				//contentPanel.repaint();
 			}
 		});
 		
 		buttonPanel.add(resetButton);
 		buttonPanel.add(startButton);
 		
+		topPanel.add(buttonPanel, BorderLayout.EAST);
+		topPanel.add(menuPanel, BorderLayout.WEST);
 		
 		contentPanel = new ContentPanel();
 		
@@ -118,7 +128,7 @@ public class Main {
 		
 		frame.getContentPane().setLayout(new BorderLayout());
 		
-		frame.getContentPane().add(buttonPanel, BorderLayout.NORTH);		
+		frame.getContentPane().add(topPanel, BorderLayout.NORTH);		
 		frame.getContentPane().add(contentPanel, BorderLayout.CENTER);
 		frame.getContentPane().add(statusBar, BorderLayout.SOUTH);
 		
@@ -152,7 +162,13 @@ public class Main {
 				//contentPanel.repaint();
 				endTime = System.currentTimeMillis();
 				livingCells.setText(String.valueOf(contentPanel.getLivingCells()));
-				contentPanel.repaint();		
+				contentPanel.repaint();	
+				try {
+					sleep(20);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 		
@@ -167,32 +183,17 @@ public class Main {
 		@Override
 		public void run(){
 			edit = false;
-			long startTime;
-			while(running){
-				startTime = System.currentTimeMillis();
+			while(runningSimulation){
 				contentPanel.simulate();
-				//System.out.println("Simulation time: " + (System.currentTimeMillis() - startTime));
-				startTime = System.currentTimeMillis();
 				contentPanel.repaint();
-				//System.out.println("Paint time: " + (System.currentTimeMillis() - startTime));
 				simulations++;
 				simulationsLabel.setText(String.valueOf(simulations));
 				livingCells.setText(String.valueOf(contentPanel.getLivingCells()));
 				if(contentPanel.getLivingCells() == 0){
-					running = false;
-					
-					edit = true;
-					
-					initLoop = new InitLoop();
-					initLoop.start();
-					
-					buttonPanel.removeAll();
-					buttonPanel.add(startButton);
-					buttonPanel.revalidate();
-					buttonPanel.repaint();
+					pauseSimulation();
 				}
 				try {
-					sleep(10);
+					sleep(20);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -211,6 +212,80 @@ public class Main {
 	
 	public static boolean editAllowed(){
 		return edit;
+	}
+
+	/**
+	 * 
+	 */
+	public static void pauseSimulation() {
+		runningSimulation = false;
+		
+		edit = true;
+		
+		initLoop = new InitLoop();
+		initLoop.start();
+		
+		buttonPanel.removeAll();
+		buttonPanel.add(resetButton);
+		buttonPanel.add(startButton);
+		buttonPanel.revalidate();
+		buttonPanel.repaint();
+	}
+
+	/**
+	 * 
+	 */
+	public static void startSimulation() {
+		runningSimulation = true;
+		
+		edit = false;
+		
+		simLoop = new SimulationLoop();
+		simLoop.start();
+		
+		buttonPanel.removeAll();
+		buttonPanel.add(resetButton);
+		buttonPanel.add(pauseButton);
+		buttonPanel.revalidate();
+		buttonPanel.repaint();
+	}
+	
+	public static void saveSimulation(){
+		JFrame saveFrame = new JFrame("Save string");
+		JTextField saveField = new JTextField();
+		saveField.setColumns(25);
+		saveField.setText(contentPanel.getSaveString());
+		
+		saveFrame.getContentPane().add(saveField);
+		saveFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		saveFrame.pack();
+		saveFrame.setResizable(false);
+		saveFrame.setVisible(true);
+		saveFrame.setLocationRelativeTo(null);
+	}
+	
+	public static void loadSimulation(){
+		JFrame loadFrame = new JFrame("Load string");
+		
+		JTextField loadField = new JTextField();
+		loadField.setColumns(25);
+		
+		JButton load = new JButton("Load");
+		load.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				contentPanel.loadString(loadField.getText());
+				loadFrame.dispose();
+			}
+		});
+		
+		loadFrame.getContentPane().setLayout(new FlowLayout(FlowLayout.LEFT));
+		loadFrame.getContentPane().add(loadField);
+		loadFrame.getContentPane().add(load);
+		loadFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		loadFrame.pack();
+		loadFrame.setResizable(false);
+		loadFrame.setVisible(true);
+		loadFrame.setLocationRelativeTo(null);		
 	}
 
 }
