@@ -12,6 +12,7 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.io.IOException;
 import java.lang.reflect.Array;
+import java.util.Scanner;
 import java.util.stream.IntStream;
 
 import javax.imageio.ImageIO;
@@ -19,10 +20,10 @@ import javax.swing.JPanel;
 
 public class ContentPanel extends JPanel implements MouseListener, MouseMotionListener{
 	
-	private GridBagConstraints c;
+	private static String delimiter = "c";
+	private static int width = 375, height = 175;
 	
-	private int width;
-	private int height;
+	private GridBagConstraints c;
 	
 	private int previousX;
 	private int previousY;
@@ -33,7 +34,7 @@ public class ContentPanel extends JPanel implements MouseListener, MouseMotionLi
 	private Image death;
 	private Image life;
 	
-	private int space;//Space between cells
+	private int space, size;//Space between cells
 	
 	private boolean mousePressed;
 	
@@ -45,13 +46,10 @@ public class ContentPanel extends JPanel implements MouseListener, MouseMotionLi
 		addMouseMotionListener(this);
 		
 		space = 0;
+		size = 5;
 		
 		c = new GridBagConstraints();
 		c.insets = new Insets(0, 0, space, space);
-		
-		//Number of tiles
-		width = 190;
-		height = 90;
 		
 		lifeAndDeath = new int[height][width];
 		
@@ -61,13 +59,13 @@ public class ContentPanel extends JPanel implements MouseListener, MouseMotionLi
 		
 		//Load images
 		try{
-			death= ImageIO.read(getClass().getClassLoader().getResource("com/ihga/graphics/img/death.png"));
-			life = ImageIO.read(getClass().getClassLoader().getResource("com/ihga/graphics/img/life.png"));
+			death= ImageIO.read(getClass().getClassLoader().getResource("com/ihga/graphics/img/death_" + size + ".png"));
+			life = ImageIO.read(getClass().getClassLoader().getResource("com/ihga/graphics/img/life_" + size + ".png"));
 		}catch(IOException e){
 			e.printStackTrace();
 		}
 		
-		setPreferredSize(new Dimension(width * (10 + space), height * (10 + space)));
+		setPreferredSize(new Dimension(width * (size + space), height * (size + space)));
 	}
 	
 	@Override
@@ -77,9 +75,9 @@ public class ContentPanel extends JPanel implements MouseListener, MouseMotionLi
 			for(c.gridy = 0; c.gridy < height; c.gridy++){
 				//Draw LabelIcons
 				if(lifeAndDeath[c.gridy][c.gridx] == 0){
-					g.drawImage(death, c.gridx * (10 + space), c.gridy * (10 + space), null);
+					g.drawImage(death, c.gridx * (size + space), c.gridy * (size + space), null);
 				}else{
-					g.drawImage(life, c.gridx * (10 + space), c.gridy * (10 + space), null);
+					g.drawImage(life, c.gridx * (size + space), c.gridy * (size + space), null);
 				}
 			}
 		}
@@ -103,14 +101,6 @@ public class ContentPanel extends JPanel implements MouseListener, MouseMotionLi
 	private boolean checkCell(int x, int y){
 		boolean live = false;
 		
-		/*
-		 * Rules:
-		 * 	1. Any live cell with fewer than two live neighbours dies, as if caused by under-population.
-		 * 	2. Any live cell with two or three live neighbours lives on to the next generation.
-		 *	3. Any live cell with more than three live neighbours dies, as if by over-population.
-		 * 	4. Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
-		 */
-		
 		int sum = 0;
 		
 		for(int i = x - 1; i < x + 2; i++){
@@ -122,6 +112,14 @@ public class ContentPanel extends JPanel implements MouseListener, MouseMotionLi
 				}				
 			}
 		}
+		
+		/*
+		 * Rules:
+		 * 	1. Any live cell with fewer than two live neighbours dies, as if caused by under-population.
+		 * 	2. Any live cell with two or three live neighbours lives on to the next generation.
+		 *	3. Any live cell with more than three live neighbours dies, as if by over-population.
+		 * 	4. Any dead cell with exactly three live neighbours becomes a live cell, as if by reproduction.
+		 */
 		
 		if(sum - 1 < 2 && lifeAndDeath[y][x] == 1){
 			//Rule 1: die
@@ -171,8 +169,8 @@ public class ContentPanel extends JPanel implements MouseListener, MouseMotionLi
 	public void mouseClicked(MouseEvent e) {
 		Point mousePoint = e.getPoint();
 		
-		int x = mousePoint.x/(10 + space);
-		int y = mousePoint.y/(10 + space);
+		int x = mousePoint.x/(size + space);
+		int y = mousePoint.y/(size + space);
 		
 		previousX = x;
 		previousY = y;
@@ -213,8 +211,8 @@ public class ContentPanel extends JPanel implements MouseListener, MouseMotionLi
 	public void mouseDragged(MouseEvent e){
 		Point mousePoint = e.getPoint();
 		
-		int x = mousePoint.x/(10 + space);
-		int y = mousePoint.y/(10 + space);
+		int x = mousePoint.x/(size + space);
+		int y = mousePoint.y/(size + space);
 		
 		//Check if the cell has to brought alive or killed, check if editing is allowed and check if this cell wasn't changed the previous time we changed a cell.
 		if(lifeAndDeath[y][x] == 0 && Main.editAllowed() && (previousX != x ^ previousY != y)){
@@ -225,5 +223,45 @@ public class ContentPanel extends JPanel implements MouseListener, MouseMotionLi
 		
 		previousX = x;
 		previousY = y;
+		
+		//repaint();
+	}
+	
+	public String getSaveString(){
+		String save = "";
+		
+		for(int x = 0; x < width; x++){
+			for(int y = 0; y < height; y++){
+				if(lifeAndDeath[y][x] == 1){
+					save += x + "," + y + delimiter;
+				}
+			}
+		}
+		
+		return save;
+	}
+	
+	public void loadString(String load){
+		Scanner sc = new Scanner(load);
+		sc.useDelimiter(delimiter);
+		
+		while(sc.hasNext()){
+			String coord = sc.next();
+			String[] c = coord.split(",");
+			
+			lifeAndDeath[Integer.parseInt(c[1])][Integer.parseInt(c[0])] = 1;
+		}
+	}
+	
+	public static String getDelimiter(){
+		return delimiter;
+	}
+	
+	public static int getFieldWidth(){
+		return width;
+	}
+	
+	public static int getFieldHeight(){
+		return height;
 	}
 }
