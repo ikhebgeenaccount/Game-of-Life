@@ -5,7 +5,8 @@ public class PatternScripter {
 	private static String delimiter = ContentPanel.getDelimiter();
 	
 	public static void main(String[] args){
-		System.out.println(generateRandom(7500));
+		ContentPanel.loadProperties();
+		System.out.print(generateRandom(200000));
 	}
 	
 	public static String getStraightLine(int y){
